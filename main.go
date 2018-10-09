@@ -1,4 +1,4 @@
-package main
+package kubeless
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
-	"github.com/joho/godotenv"
+	"github.com/kubeless/kubeless/pkg/functions"
 	"io/ioutil"
 	"net/http"
 	"log"
@@ -15,11 +15,7 @@ import (
 	"strings"
 )
 
-func main() {
-	err := godotenv.Load()
-  if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func handler(event functions.Event, context functions.Context) (string, error) {
 	sess, err := session.NewSession()
 	if err != nil {
 		log.Fatal("failed to create session,", err)
@@ -28,9 +24,9 @@ func main() {
 	svc := route53.New(sess)
 
 	// Get env variables
-	domain := os.Getenv("DOMAIN")
-	recordType := os.Getenv("TYPE")
-	records := strings.Split(os.Getenv("RECORDS"), ",")
+	domain := string("swhurl.com.")
+	recordType := string("A")
+	records := strings.Split(string("swhurl.com,*.swhurl.com"), ",")
 	
 	rrs, err := getResourceRecordSets(svc)
 	if (err != nil) {
@@ -57,14 +53,18 @@ func main() {
 	  log.Print(fmt.Sprintf("Registered ip address matches home ip address: %s", homeIp))
 	} else {
 	  log.Print("Update Route53 A record")
-		createARecord(svc, records, homeIp)
+		response, err := createARecord(svc, records, homeIp)
+		if (err != nil) {
+      log.Fatal(err)
+		}
 	}
+	return response, nil
 	
 }
 
 func getResourceRecordSets(svc *route53.Route53) (*route53.ListResourceRecordSetsOutput, error) {
 	listParams := &route53.ListResourceRecordSetsInput{
-		HostedZoneId: aws.String(os.Getenv("HOSTED_ZONE_ID")),
+		HostedZoneId: aws.String("Z3NVP9T7260ZB8"),
 	}
 	return svc.ListResourceRecordSets(listParams)
 }
@@ -95,7 +95,8 @@ func isIpAddress(str string) (bool) {
   return re.MatchString(str)
 }
 
-func createARecord(svc *route53.Route53, records []string, ipAddress string) {
+func createARecord(svc *route53.Route53, records []string, ipAddress string) (string, error) {
+	response := ""
 	for _, v := range records {
 		params := &route53.ChangeResourceRecordSetsInput{
 			ChangeBatch: &route53.ChangeBatch{
@@ -123,15 +124,14 @@ func createARecord(svc *route53.Route53, records []string, ipAddress string) {
 		resp, err := svc.ChangeResourceRecordSets(params)
 
 		if err != nil {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
-			fmt.Println(err.Error())
-			return
+			return "", err
 		}
 
 		// Pretty-print the response data.
 		fmt.Println("Change Response:")
 		fmt.Println(resp)
+		response += fmt.Sprintln(resp)
 	}
+	return response, nil
 }
 
