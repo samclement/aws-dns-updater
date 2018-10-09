@@ -17,6 +17,7 @@ import (
 
 func handler(event functions.Event, context functions.Context) (string, error) {
 	sess, err := session.NewSession()
+	res := string("")
 	if err != nil {
 		log.Fatal("failed to create session,", err)
 	}
@@ -57,8 +58,9 @@ func handler(event functions.Event, context functions.Context) (string, error) {
 		if (err != nil) {
       log.Fatal(err)
 		}
+		res = response
 	}
-	return response, nil
+	return res, nil
 	
 }
 
