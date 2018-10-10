@@ -9,3 +9,5 @@ vendor
 !Gopkg.lock
 !Gopkg.toml
 !env
+!cronjob.yml
+!secret.yml

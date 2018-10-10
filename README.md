@@ -21,3 +21,12 @@ The `env` file includes and example configuration that can be used locally with 
 
 - `docker run --rm -v ${PWD}/.env:/.env <my-tag>`
 
+## k8s
+
+Create a cronjob to update dns on a schedule:
+
+- Update `secret.yml` with AWS credentials
+- Update `cronjob.yml` with envrionment variables
+- `kubectl apply -f secret.yml`
+- `kubectl apply -f cronjob.yml`
+
