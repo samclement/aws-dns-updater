@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/route53"
-	"github.com/joho/godotenv"
 	"io/ioutil"
 	"net/http"
 	"log"
@@ -16,10 +15,6 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-  if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 	sess, err := session.NewSession()
 	if err != nil {
 		log.Fatal("failed to create session,", err)
