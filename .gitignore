@@ -1,0 +1,10 @@
+**/*
+!**/*.go
+!**/
+vendor
+
+!.gitignore
+!**/*.md
+!Dockerfile
+!Gopkg.lock
+!Gopkg.toml
