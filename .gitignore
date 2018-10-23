@@ -1,13 +1,2 @@
-**/*
-!**/*.go
-!**/
-vendor
-
-!.gitignore
-!**/*.md
-!Dockerfile
-!Gopkg.lock
-!Gopkg.toml
-!env
-!cronjob.yml
-!secret.yml
+aws-dns-updater
+tags
