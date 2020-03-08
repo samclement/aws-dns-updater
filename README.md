@@ -25,8 +25,7 @@ The `env` file includes and example configuration that can be used locally with 
 
 Create a cronjob to update dns on a schedule:
 
-- Update `k8s/secret.yml` with AWS credentials
-- Update `k8s/cronjob.yml` with envrionment variables
-- `kubectl apply -f k8s/secret.yml`
-- `kubectl apply -f k8s/cronjob.yml`
+- Update `k8s/cronjob.yaml` with AWS credentials
+- Update `k8s/cronjob.yaml` with envrionment variables
+- `kubectl apply -f k8s/cronjob.yaml`
 

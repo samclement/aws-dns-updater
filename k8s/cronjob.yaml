@@ -1,11 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jobs
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: jobs
+  name: aws-route53-creds
+type: Opaque
+data:
+  aws_access_key_id: "<my_aws_access_key_id>"
+  aws_secret_access_key: "<my_aws_secret_access_key>"
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
+  namespace: jobs
   name: aws-dns-updater
 spec:
   schedule: "*/3 * * * *"
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
       template:
